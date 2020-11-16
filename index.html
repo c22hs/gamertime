@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Hello, WebVR! • A-Frame</title>
+	<meta name="description" content="Hello, WebVR! • A-Frame" />
+	<script src="https://aframe.io/releases/1.0.4/aframe.min.js">
+	</script>
+	</script>
+	<script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js">
+	</script>
+	<script src="https://unpkg.com/aframe-animation-timeline-component@2.0.0/dist/aframe-animation-timeline-component.min.js">
+	</script>
+	<script>
+		AFRAME.registerComponent("boxcreate", {
+        init: function() {
+          var sceneEl = document.querySelector("a-scene");
+          var entEl = document.getElementById("caterpillar");
+          var xVal = parseInt(entEl.getAttribute("position").x, 10);
+          window.addEventListener("keydown", function(e){
+            if(e.keyCode === 65) { //a key
+              console.log("a");
+              var xValue = parseInt(entEl.getAttribute("position").x, 10) + 1;
+              document.getElementById("caterpillar").setAttribute("position",{
+              z: parseInt(entEl.getAttribute("position").z, 10),
+              x: parseInt(xValue, 10)       
+          });
+            }
+            /*if(e.keyCode === 68) { //a key
+              console.log("d");
+              var xValue = parseInt(entEl.getAttribute("position").x, 10) - 1;
+              var rotation = entEl.getAttribute("rotation").y;
+              if(rotation<360){
+                rotation = entEl.getAttribute("rotation").y + 90;
+              } else{
+                rotation = 0;
+              }
+
+              document.getElementById("caterpillar").setAttribute("rotation",{
+              y: rotation
+          });
+            }*/
+            /*if(e.keyCode === 83) { //a key
+              console.log("s");
+              var xValue = parseInt(entEl.getAttribute("position").z, 10) - 1;
+              document.getElementById("caterpillar").setAttribute("position",{
+              x: parseInt(entEl.getAttribute("position").x, 10),
+              z: parseInt(xValue, 10)       
+          });
+            }
+            if(e.keyCode === 87) { //a key
+              console.log("w");
+              var test = 0;
+              var xValue = parseInt(entEl.getAttribute("position").z, 10) + 1;
+              document.getElementById("caterpillar").setAttribute("position",{
+              x: parseInt(entEl.getAttribute("position").x, 10),
+              z: parseInt(xValue, 10)  
+              });
+            }*/
+            });
+          },
+        
+        movement: function(){
+            
+        }
+        
+      });
+	</script>
+	<script>
+		/*
+    To-do list 
+    Make snake auto move
+    Snake Turning
+    Snake Lengthening
+    Score
+    Walls.1;
+    Collision
+    Death
+    */
+    movement: function g(){
+      var entEl = document.getElementById("caterpillar");
+      var xValue = parseFloat(entEl.getAttribute("position").z, 10) + 2.5;
+              document.getElementById("caterpillar").setAttribute("position",{
+              x: parseFloat(entEl.getAttribute("position").x, 10),
+              z: parseFloat(xValue, 10)  
+              });
+    if(entEl.getAttribute("position").x>=25 || entEl.getAttribute("position").x<=-25 || entEl.getAttribute("position").z>=25 || entEl.getAttribute("position").z<=-25){
+      document.getElementById("caterpillar").setAttribute("position",{
+              x: 0,
+              z: 0
+    });
+    }
+    }
+    var time = setInterval(g,250);
+
+	</script>
+</head>
+
+<body>
+	<a-scene boxcreate>
+		<a-assets>
+			<a-mixin id="light" light="color: #DDDDFF; distance: 120; intensity: 2; type: point"></a-mixin>
+		</a-assets>
+		<a-entity mixin="light" position="0 25 0"></a-entity>
+		<a-entity camera look-controls posit"-90n="0 25 0"></a-entity>
+		<a-plane position="0 .1 0" rotation="0 0 50" color="#20B2AA" shadow></a-plane>
+		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 90 0 " position="0 0 0">
+			<a-sphere id="head" position="0 1.25 0" radius="1.25" color="#EF2D5E" shadow></a-sphere>
+			<a-sphere id="nose" position="0 1.25 1" radius=".5" color="#FFFFFF" shadow></a-sphere>
+			<a-sphere id="leftEye" position=".5 1.75 1" radius=".2" color="#000000" shadow></a-sphere>
+			<a-sphere id="rightEye" position="-.5 1.75 1" radius=".2" color="#000000" shadow></a-sphere>
+		</a-entity>
+	</a-scene>
+</body>
+
+</html>
