@@ -23,29 +23,32 @@
               console.log("right");
               var xValue = parseInt(entEl.getAttribute("position").x, 10) - 1;
               var rotation = entEl.getAttribute("rotation").y;
-              if(rotation>-360){
-                rotation = entEl.getAttribute("rotation").y - 90;
-              } else{
-                rotation = -90;
-              }
+              if(rotation== 0){
+                rotation = 270;
+              } else if(rotation<360>0){
+                rotation = entEl.getAttribute("rotation").y -90;
+            }
+              
 
               document.getElementById("caterpillar").setAttribute("rotation",{
               y: rotation
           });
             }
+            
             if(e.keyCode === 65) { //a key
-              console.log("left");
+              
               var xValue = parseInt(entEl.getAttribute("position").x, 10) - 1;
               var rotation = entEl.getAttribute("rotation").y;
-              if(rotation<360){
+              if(rotation<270){
                 rotation = entEl.getAttribute("rotation").y + 90;
               } else{
-                rotation = 90;
+                rotation = 0;
               }
 
               document.getElementById("caterpillar").setAttribute("rotation",{
               y: rotation
           });
+          console.log(entEl.getAttribute("rotation").y);
             } 
       });
         }
@@ -64,12 +67,32 @@
     */
     movement: function g(){
       var entEl = document.getElementById("caterpillar");
+      if(entEl.getAttribute("rotation").y == 0){
       var xValue = parseFloat(entEl.getAttribute("position").z, 10) + 2.5;
               document.getElementById("caterpillar").setAttribute("position",{
               x: parseFloat(entEl.getAttribute("position").x, 10),
               z: parseFloat(xValue, 10)  
               });
-    
+      } else if(entEl.getAttribute("rotation").y == 90 ){
+        var xValue = parseFloat(entEl.getAttribute("position").x, 10) + 2.5;
+              document.getElementById("caterpillar").setAttribute("position",{
+              x: parseFloat(xValue, 10),
+              z: parseFloat(entEl.getAttribute("position").z, 10)
+              });
+      } else if(entEl.getAttribute("rotation").y == 180){
+        var xValue = parseFloat(entEl.getAttribute("position").z, 10) - 2.5;
+              document.getElementById("caterpillar").setAttribute("position",{
+              x: parseFloat(entEl.getAttribute("position").x, 10),
+              z: parseFloat(xValue, 10)  
+              });
+        
+      } else if(entEl.getAttribute("rotation").y == 270){
+         var xValue = parseFloat(entEl.getAttribute("position").x, 10) - 2.5;
+              document.getElementById("caterpillar").setAttribute("position",{
+              x: parseFloat(xValue, 10),
+              z: parseFloat(entEl.getAttribute("position").z, 10)
+              });
+      }
     if(entEl.getAttribute("position").x>=25 || entEl.getAttribute("position").x<=-25 || entEl.getAttribute("position").z>=25 || entEl.getAttribute("position").z<=-25){
       document.getElementById("caterpillar").setAttribute("position",{
               x: 0,
