@@ -19,22 +19,28 @@
           var entEl = document.getElementById("caterpillar");
           var xVal = parseInt(entEl.getAttribute("position").x, 10);
           window.addEventListener("keydown", function(e){
-            if(e.keyCode === 65) { //a key
-              console.log("a");
-              var xValue = parseInt(entEl.getAttribute("position").x, 10) + 1;
-              document.getElementById("caterpillar").setAttribute("position",{
-              z: parseInt(entEl.getAttribute("position").z, 10),
-              x: parseInt(xValue, 10)       
+            if(e.keyCode === 68) { //a key
+              console.log("right");
+              var xValue = parseInt(entEl.getAttribute("position").x, 10) - 1;
+              var rotation = entEl.getAttribute("rotation").y;
+              if(rotation>-360){
+                rotation = entEl.getAttribute("rotation").y - 90;
+              } else{
+                rotation = -90;
+              }
+
+              document.getElementById("caterpillar").setAttribute("rotation",{
+              y: rotation
           });
             }
-            if(e.keyCode === 68) { //a key
-              console.log("d");
+            if(e.keyCode === 65) { //a key
+              console.log("left");
               var xValue = parseInt(entEl.getAttribute("position").x, 10) - 1;
               var rotation = entEl.getAttribute("rotation").y;
               if(rotation<360){
                 rotation = entEl.getAttribute("rotation").y + 90;
               } else{
-                rotation = 0;
+                rotation = 90;
               }
 
               document.getElementById("caterpillar").setAttribute("rotation",{
@@ -63,6 +69,7 @@
               x: parseFloat(entEl.getAttribute("position").x, 10),
               z: parseFloat(xValue, 10)  
               });
+    
     if(entEl.getAttribute("position").x>=25 || entEl.getAttribute("position").x<=-25 || entEl.getAttribute("position").z>=25 || entEl.getAttribute("position").z<=-25){
       document.getElementById("caterpillar").setAttribute("position",{
               x: 0,
@@ -80,7 +87,7 @@
 		<a-entity light="color: #DDDDFF; distance: 120; intensity: 2; type: point" position="0 25 0"></a-entity>
 		<a-entity camera look-controls position ="0 25 0"></a-entity>
 		<a-plane position="0 0 0" rotation="-90 0 0" color="#20B2AA" width ="50" height = "50" shadow></a-plane>
-		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 90 0 " position="0 0 0">
+		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 0 0 " position="0 0 0">
 			<a-sphere id="head" position="0 1.25 0" radius="1.25" color="#EF2D5E" shadow></a-sphere>
 			<a-sphere id="nose" position="0 1.25 1" radius=".5" color="#FFFFFF" shadow></a-sphere>
 			<a-sphere id="leftEye" position=".5 1.75 1" radius=".2" color="#000000" shadow></a-sphere>
