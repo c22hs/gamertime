@@ -27,7 +27,7 @@
               x: parseInt(xValue, 10)       
           });
             }
-            /*if(e.keyCode === 68) { //a key
+            if(e.keyCode === 68) { //a key
               console.log("d");
               var xValue = parseInt(entEl.getAttribute("position").x, 10) - 1;
               var rotation = entEl.getAttribute("rotation").y;
@@ -40,31 +40,9 @@
               document.getElementById("caterpillar").setAttribute("rotation",{
               y: rotation
           });
-            }*/
-            /*if(e.keyCode === 83) { //a key
-              console.log("s");
-              var xValue = parseInt(entEl.getAttribute("position").z, 10) - 1;
-              document.getElementById("caterpillar").setAttribute("position",{
-              x: parseInt(entEl.getAttribute("position").x, 10),
-              z: parseInt(xValue, 10)       
-          });
-            }
-            if(e.keyCode === 87) { //a key
-              console.log("w");
-              var test = 0;
-              var xValue = parseInt(entEl.getAttribute("position").z, 10) + 1;
-              document.getElementById("caterpillar").setAttribute("position",{
-              x: parseInt(entEl.getAttribute("position").x, 10),
-              z: parseInt(xValue, 10)  
-              });
-            }*/
-            });
-          },
-        
-        movement: function(){
-            
+            } 
+      });
         }
-        
       });
 	</script>
 	<script>
@@ -99,12 +77,9 @@
 
 <body>
 	<a-scene boxcreate>
-		<a-assets>
-			<a-mixin id="light" light="color: #DDDDFF; distance: 120; intensity: 2; type: point"></a-mixin>
-		</a-assets>
-		<a-entity mixin="light" position="0 25 0"></a-entity>
-		<a-entity camera look-controls posit"-90n="0 25 0"></a-entity>
-		<a-plane position="0 .1 0" rotation="0 0 50" color="#20B2AA" shadow></a-plane>
+		<a-entity light="color: #DDDDFF; distance: 120; intensity: 2; type: point" position="0 25 0"></a-entity>
+		<a-entity camera look-controls position ="0 25 0"></a-entity>
+		<a-plane position="0 0 0" rotation="-90 0 0" color="#20B2AA" width ="50" height = "50" shadow></a-plane>
 		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 90 0 " position="0 0 0">
 			<a-sphere id="head" position="0 1.25 0" radius="1.25" color="#EF2D5E" shadow></a-sphere>
 			<a-sphere id="nose" position="0 1.25 1" radius=".5" color="#FFFFFF" shadow></a-sphere>
@@ -113,5 +88,4 @@
 		</a-entity>
 	</a-scene>
 </body>
-
 </html>
