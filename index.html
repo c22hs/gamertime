@@ -15,6 +15,7 @@
 	<script>
 		AFRAME.registerComponent("boxcreate", {
         init: function() {
+          
           var sceneEl = document.querySelector("a-scene");
           var entEl = document.getElementById("caterpillar");
           var xVal = parseInt(entEl.getAttribute("position").x, 10);
@@ -101,13 +102,28 @@
     }
     }
     var time = setInterval(g,250);
-
 	</script>
+  <script>
+    var apples = 0;
+    spawn: function spawner(){
+      var applelol = document.getElementById("apple");
+      var caterpillar =document.getElementById("caterpillar")
+      if(applelol.getAttribute("position").x==caterpillar.getAttribute("position").x && applelol.getAttribute("position").z==caterpillar.getAttribute("position").z){
+        this.apples++;
+        document.getElementById("apple").setAttribute("position",{
+              x: Math.floor(Math.random() * 9-9) * 2.5,
+              z: Math.floor(Math.random() * 9-9) * 2.5
+    });
+      console.log(this.apples);
+      }
+    }
+    var time = setInterval(spawner,250);
+    </script> 
 </head>
 
 <body>
 	<a-scene boxcreate>
-		<a-entity light="color: #DDDDFF; distance: 120; intensity: 2; type: point" position="0 25 0"></a-entity>
+    <a-sphere id="apple" radius="1.25" position="0 1.25 0" color="#00FF00"></a-sphere>
 		<a-entity camera look-controls position ="0 25 0"></a-entity>
 		<a-plane position="0 0 0" rotation="-90 0 0" color="#20B2AA" width ="50" height = "50" shadow></a-plane>
 		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 0 0 " position="0 0 0">
