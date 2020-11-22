@@ -8,6 +8,7 @@
 	<script src="https://aframe.io/releases/1.0.4/aframe.min.js">
 	</script>
 	</script>
+   <script src="https://unpkg.com/aframe-text-geometry-component@^0.5.0/dist/aframe-text-geometry-component.min.js"></script> 
 	<script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js">
 	</script>
 	<script src="https://unpkg.com/aframe-animation-timeline-component@2.0.0/dist/aframe-animation-timeline-component.min.js">
@@ -15,7 +16,9 @@
 	<script>
 		AFRAME.registerComponent("boxcreate", {
         init: function() {
-          
+           window.snake = [];
+          window.snake[0]=document.getElementById("caterpillar");
+        
           var sceneEl = document.querySelector("a-scene");
           var entEl = document.getElementById("caterpillar");
           var xVal = parseInt(entEl.getAttribute("position").x, 10);
@@ -68,6 +71,15 @@
     */
     movement: function g(){
       var entEl = document.getElementById("caterpillar");
+      //console.log(window.snake.length);
+      for(var i = window.snake.length; i>1;i--){
+        window.snake[i-1].setAttribute("position",{
+          x:window.snake[i-2].getAttribute("position").x,
+          y:window.snake[i-2].getAttribute("position").y,
+          z:window.snake[i-2].getAttribute("position").z
+        });
+      }
+      //console.log(window.snake[0].getAttribute("position"));
       if(entEl.getAttribute("rotation").y == 0){
       var xValue = parseFloat(entEl.getAttribute("position").z, 10) + 2.5;
               document.getElementById("caterpillar").setAttribute("position",{
@@ -95,43 +107,92 @@
               });
       }
     if(entEl.getAttribute("position").x>=25 || entEl.getAttribute("position").x<=-25 || entEl.getAttribute("position").z>=25 || entEl.getAttribute("position").z<=-25){
-      document.getElementById("caterpillar").setAttribute("position",{
-              x: 0,
-              z: 0
-    });
+      clearInterval(window.time);
+      clearInterval(window.spawn);
+      document.getElementById("score").object3D.visible = false;
+      document.getElementById("gameover").object3D.visible = true;
     }
     }
-    var time = setInterval(g,250);
+    window.time = setInterval(g,250);
 	</script>
   <script>
-    var apples = 0;
+    window.apples = 0;
+    
+    
     spawn: function spawner(){
       var applelol = document.getElementById("apple");
       var caterpillar =document.getElementById("caterpillar")
+      var text = document.getElementById("score");
+      var endText = document.getElementById("scoreEnd");
       if(applelol.getAttribute("position").x==caterpillar.getAttribute("position").x && applelol.getAttribute("position").z==caterpillar.getAttribute("position").z){
-        this.apples++;
+        window.apples++;
+        
+          var sceneEl = document.querySelector('a-scene')
+        var entityEl = document.createElement('a-entity');
+        entityEl.setAttribute('geometry', {
+          primitive: 'sphere',
+          radius: 1.25
+        });
+        entityEl.setAttribute('position',{
+          x:50,
+          y:50,
+          z:50
+        });
+        entityEl.setAttribute('shadow',{
+          cast:true,
+          recieve:true
+        });
+        entityEl.setAttribute('material',{
+          color:'#EF2D5E'
+        });
+        text.setAttribute("text-geometry",{
+          value: "Score: " + window.apples
+        })
+        endText.setAttribute("text-geometry",{
+          value: "Score: " + window.apples
+        })
         document.getElementById("apple").setAttribute("position",{
               x: Math.floor(Math.random() * 9-9) * 2.5,
+              y:2,
               z: Math.floor(Math.random() * 9-9) * 2.5
     });
-      console.log(this.apples);
+      window.snake[window.snake.length]=entityEl;
+      
+      sceneEl.appendChild(entityEl);
       }
+      for(var i = window.snake.length; i>2;i--){
+        if(window.snake[i-1].getAttribute("position").x == window.snake[0].getAttribute("position").x && window.snake[i-1].getAttribute("position").z == window.snake[0].getAttribute("position").z){
+          clearInterval(window.time);
+          clearInterval(window.spawn);
+          document.getElementById("score").object3D.visible = false;
+          document.getElementById("gameover").object3D.visible = true;
+        }
+      }
+
+      
     }
-    var time = setInterval(spawner,250);
-    </script> 
+    window.spawn = setInterval(spawner,250);
+    </script>
+   
 </head>
 
 <body>
 	<a-scene boxcreate>
+    <a-entity id = "score" text-geometry="value: Score: 0"material="color:#000000" position = "-50 0 -30" rotation = "-90 0 0" scale = "10 10 10" visible=true></a-entity>  
     <a-sphere id="apple" radius="1.25" position="0 1.25 0" color="#00FF00"></a-sphere>
-		<a-entity camera look-controls position ="0 25 0"></a-entity>
+		<a-entity camera position ="0 50 0" rotation="-90 0 0"></a-entity>
 		<a-plane position="0 0 0" rotation="-90 0 0" color="#20B2AA" width ="50" height = "50" shadow></a-plane>
-		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 0 0 " position="0 0 0">
+		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 0 0 " position="0 1.25 0">
 			<a-sphere id="head" position="0 1.25 0" radius="1.25" color="#EF2D5E" shadow></a-sphere>
 			<a-sphere id="nose" position="0 1.25 1" radius=".5" color="#FFFFFF" shadow></a-sphere>
 			<a-sphere id="leftEye" position=".5 1.75 1" radius=".2" color="#000000" shadow></a-sphere>
 			<a-sphere id="rightEye" position="-.5 1.75 1" radius=".2" color="#000000" shadow></a-sphere>
 		</a-entity>
+    <a-entity id = "gameover" visible=false>
+      <a-plane position="0 10 0" rotation="-90 0 0" color="#FFFFFF" width ="50" height = "50" shadow></a-plane>
+      <a-entity id = "scoreEnd" text-geometry="value: Score: 0"material="color:#000000" position = "-10 10 0" rotation = "-90 0 0" scale = "10 10 10"></a-entity> 
+      <a-entity id = "gameEnd" text-geometry="value: Game Over!"material="color:#000000" position = "-15 10 -10" rotation = "-90 0 0" scale = "10 10 10"></a-entity> 
+    </a-entity>
 	</a-scene>
 </body>
 </html>
