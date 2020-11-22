@@ -11,20 +11,19 @@
    <script src="https://unpkg.com/aframe-text-geometry-component@^0.5.0/dist/aframe-text-geometry-component.min.js"></script> 
 	<script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js">
 	</script>
-	<script src="https://unpkg.com/aframe-animation-timeline-component@2.0.0/dist/aframe-animation-timeline-component.min.js">
-	</script>
 	<script>
 		AFRAME.registerComponent("boxcreate", {
         init: function() {
+          //store the body nodes in list
            window.snake = [];
           window.snake[0]=document.getElementById("caterpillar");
         
           var sceneEl = document.querySelector("a-scene");
           var entEl = document.getElementById("caterpillar");
           var xVal = parseInt(entEl.getAttribute("position").x, 10);
+          //left and right controls
           window.addEventListener("keydown", function(e){
-            if(e.keyCode === 68) { //a key
-              console.log("right");
+            if(e.keyCode === 68) { //d key
               var xValue = parseInt(entEl.getAttribute("position").x, 10) - 1;
               var rotation = entEl.getAttribute("rotation").y;
               if(rotation== 0){
@@ -52,26 +51,15 @@
               document.getElementById("caterpillar").setAttribute("rotation",{
               y: rotation
           });
-          console.log(entEl.getAttribute("rotation").y);
             } 
       });
         }
       });
 	</script>
 	<script>
-		/*
-    To-do list 
-    Make snake auto move
-    Snake Turning
-    Snake Lengthening
-    Score
-    Walls.1;
-    Collision
-    Death
-    */
     movement: function g(){
       var entEl = document.getElementById("caterpillar");
-      //console.log(window.snake.length);
+      //gets each enity in the list to go to the position of the entity before it
       for(var i = window.snake.length; i>1;i--){
         window.snake[i-1].setAttribute("position",{
           x:window.snake[i-2].getAttribute("position").x,
@@ -79,7 +67,7 @@
           z:window.snake[i-2].getAttribute("position").z
         });
       }
-      //console.log(window.snake[0].getAttribute("position"));
+      //checks the rotation of the head to decide which direction it should move
       if(entEl.getAttribute("rotation").y == 0){
       var xValue = parseFloat(entEl.getAttribute("position").z, 10) + 2.5;
               document.getElementById("caterpillar").setAttribute("position",{
@@ -106,28 +94,36 @@
               z: parseFloat(entEl.getAttribute("position").z, 10)
               });
       }
+    
+    //wall collision detection
     if(entEl.getAttribute("position").x>=25 || entEl.getAttribute("position").x<=-25 || entEl.getAttribute("position").z>=25 || entEl.getAttribute("position").z<=-25){
+      //death code
       clearInterval(window.time);
       clearInterval(window.spawn);
       document.getElementById("score").object3D.visible = false;
       document.getElementById("gameover").object3D.visible = true;
     }
     }
+    //time interval makes the function repeat every 250 milliseconds 
     window.time = setInterval(g,250);
 	</script>
   <script>
+    //global score variable
     window.apples = 0;
     
-    
+    //apple eating detection
     spawn: function spawner(){
       var applelol = document.getElementById("apple");
       var caterpillar =document.getElementById("caterpillar")
       var text = document.getElementById("score");
       var endText = document.getElementById("scoreEnd");
+      //if position of head = position of apple
       if(applelol.getAttribute("position").x==caterpillar.getAttribute("position").x && applelol.getAttribute("position").z==caterpillar.getAttribute("position").z){
+        //increases score by 1
         window.apples++;
         
-          var sceneEl = document.querySelector('a-scene')
+        //defining attributes of body nodes
+        var sceneEl = document.querySelector('a-scene')
         var entityEl = document.createElement('a-entity');
         entityEl.setAttribute('geometry', {
           primitive: 'sphere',
@@ -145,23 +141,29 @@
         entityEl.setAttribute('material',{
           color:'#EF2D5E'
         });
+
+        //updating score text 
         text.setAttribute("text-geometry",{
           value: "Score: " + window.apples
         })
         endText.setAttribute("text-geometry",{
           value: "Score: " + window.apples
         })
+        //moves apple to new random position on the plane
         document.getElementById("apple").setAttribute("position",{
               x: Math.floor(Math.random() * 9-9) * 2.5,
               y:2,
               z: Math.floor(Math.random() * 9-9) * 2.5
     });
+    //adds new entity to array
       window.snake[window.snake.length]=entityEl;
       
       sceneEl.appendChild(entityEl);
       }
+      //compare position of head to position of body for collision detection
       for(var i = window.snake.length; i>2;i--){
         if(window.snake[i-1].getAttribute("position").x == window.snake[0].getAttribute("position").x && window.snake[i-1].getAttribute("position").z == window.snake[0].getAttribute("position").z){
+          //death code
           clearInterval(window.time);
           clearInterval(window.spawn);
           document.getElementById("score").object3D.visible = false;
@@ -178,16 +180,20 @@
 
 <body>
 	<a-scene boxcreate>
+   
     <a-entity id = "score" text-geometry="value: Score: 0"material="color:#000000" position = "-50 0 -30" rotation = "-90 0 0" scale = "10 10 10" visible=true></a-entity>  
     <a-sphere id="apple" radius="1.25" position="0 1.25 0" color="#00FF00"></a-sphere>
+    <!-- the camera doesn't move and looks down --> 
 		<a-entity camera position ="0 50 0" rotation="-90 0 0"></a-entity>
 		<a-plane position="0 0 0" rotation="-90 0 0" color="#20B2AA" width ="50" height = "50" shadow></a-plane>
+    <!-- caterpillar head -->
 		<a-entity scale="1 1 1" id="caterpillar" rotation ="0 0 0 " position="0 1.25 0">
 			<a-sphere id="head" position="0 1.25 0" radius="1.25" color="#EF2D5E" shadow></a-sphere>
 			<a-sphere id="nose" position="0 1.25 1" radius=".5" color="#FFFFFF" shadow></a-sphere>
 			<a-sphere id="leftEye" position=".5 1.75 1" radius=".2" color="#000000" shadow></a-sphere>
 			<a-sphere id="rightEye" position="-.5 1.75 1" radius=".2" color="#000000" shadow></a-sphere>
 		</a-entity>
+    <!--gameover screen is invisible until deathcode-->
     <a-entity id = "gameover" visible=false>
       <a-plane position="0 10 0" rotation="-90 0 0" color="#FFFFFF" width ="50" height = "50" shadow></a-plane>
       <a-entity id = "scoreEnd" text-geometry="value: Score: 0"material="color:#000000" position = "-10 10 0" rotation = "-90 0 0" scale = "10 10 10"></a-entity> 
